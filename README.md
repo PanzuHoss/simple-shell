@@ -1,55 +1,48 @@
-Simple C Shell
-A minimal, interactive Unix shell implemented in C. This project was created to understand the inner workings of process management, system calls, and the lifecycle of a shell (Read-Evaluate-Print Loop).
+# sish — A Simple Shell in C
 
-Features
-REPL Loop: Continuously reads input, parses it, and executes commands.
+A minimal Unix shell written in C, built as a first systems programming project. Supports command execution, dynamic input buffering, and a clean exit.
 
-Dynamic Memory: Handles variable-length input commands and arguments using malloc and realloc.
+---
 
-Process Management: Uses fork(), execvp(), and waitpid() to execute system programs.
+## Features
 
-Built-in Commands: Supports an internal exit command to terminate the session.
+- **Command execution** — runs any program available in your `PATH` using `execvp`
+- **Dynamic input buffering** — handles arbitrarily long input lines by reallocating memory as needed
+- **Tokenization** — splits input on spaces, tabs, and newlines using `strtok`
+- **Graceful exit** — type `exit` to quit the shell cleanly
+- **Color-coded errors** — fork and allocation errors are highlighted in red
 
-Error Handling: Basic error reporting for memory allocation failures and invalid commands.
+---
 
-How it Works
-The shell operates in three main stages:
+## Installation & Usage
 
-Read: The shell reads a line of input from standard input using getchar().
+**Requirements:**
+- GCC
+- A Unix-like OS (Linux / macOS)
 
-Parse: The input string is broken down into "tokens" (program name and arguments) using strtok().
+**Build:**
+```bash
+gcc shell.c -o sish
+```
 
-Execute:
+**Run:**
+```bash
+./sish
+```
 
-If the command is a built-in (like exit), it executes immediately.
-
-Otherwise, the shell forks a child process. The child uses execvp() to run the command, while the parent waits for the process to finish.
-
-Prerequisites
-To compile and run this project, you need a C compiler (like gcc) and a Unix-like environment (Linux, macOS, or WSL on Windows).
-
-Getting Started
-1. Clone the repository
-Bash
-git clone https://github.com/PanzuHoss/simple-shell.git
-cd simple-shell
-
-2. Compile the shell
-Use gcc to compile the shell.c file:
-gcc shell.c -o shell
-
-3. Run the shell
-Bash
-./shell
-
-Usage
-Once inside the shell, you can run standard Unix commands:
-
-Bash
-> ls -l
-> pwd
-> echo Hello World
+**Example:**
+```
+> ls -la
+> echo hello world
 > exit
+```
 
-Acknowledgments
-This project was built following the tutorial by Danish Prakash.
+---
+
+## Known Limitations
+
+- No support for piping (`|`) or I/O redirection (`>`, `<`)
+- No built-in `cd` command — directory changes are not possible
+- No command history
+- Only one built-in command: `exit`
+- Empty input (pressing Enter) previously caused a crash — fixed with a null guard on `args[0]`
